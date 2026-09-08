@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#08090a" />
+    <title>Стоимость разработки сайта и Telegram-бота — калькулятор</title>
+    <meta name="description" content="Калькулятор стоимости: соберите проект и узнайте цену и срок. Лендинг от 20 000 ₽, интернет-магазин от 40 000 ₽, Telegram-бот от 5 000 ₽, парсеры и CRM от 5 000 ₽." />
+    <link rel="canonical" href="https://bilal.biz/order.html" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="bilal.biz" />
+    <meta property="og:url" content="https://bilal.biz/order.html" />
+    <meta property="og:title" content="Калькулятор стоимости разработки — Билал" />
+    <meta property="og:description" content="Соберите проект и увидите цену и срок: сайт, Telegram-бот или автоматизация." />
+    <meta property="og:image" content="https://bilal.biz/assets/og-cover.jpg" />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/unbounded-700-cyrillic.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-400-cyrillic.woff2" crossorigin />
+    <link rel="stylesheet" href="fonts.css?v=3d848066" />
+    <link rel="stylesheet" href="style.css?v=d2740c70" />
+  </head>
+  <body class="page-order">
+    <header class="nav wrap">
+      <a class="brand" href="index.html" aria-label="На главную"><span></span>bilal.biz</a>
+      <nav><a href="index.html#work">Услуги</a><a href="index.html#about">Обо мне</a><a href="index.html#contact">Контакты</a></nav>
+      <a class="nav-cta" href="https://t.me/pzlllv" target="_blank" rel="noreferrer">Написать в Telegram <i>↗︎</i></a>
+      <button class="nav-burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu"><i></i><i></i><i></i></button>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <nav aria-label="Мобильное меню">
+        <a href="index.html#work"><span>01</span>Услуги</a>
+        <a href="order.html"><span>02</span>Цены и расчёт</a>
+        <a href="index.html#process"><span>03</span>Как проходит работа</a>
+        <a href="index.html#faq"><span>04</span>Частые вопросы</a>
+        <a href="index.html#about"><span>05</span>Обо мне</a>
+      </nav>
+      <div class="mobile-menu-foot">
+        <a class="button" href="https://t.me/pzlllv" target="_blank" rel="noreferrer">Написать в Telegram <span>↗︎</span></a>
+        <a class="mm-mail" href="mailto:bilalpzlllv@gmail.com">bilalpzlllv@gmail.com</a>
+      </div>
+    </div>
+
+    <main class="order">
+      <section class="order-head wrap">
+        <a class="back-link" href="index.html"><span>←︎</span> На главную</a>
+        <p class="section-kicker">Расчёт стоимости</p>
+        <h1>Соберите проект<br><em>и увидите цену.</em></h1>
+        <p class="order-lead">Отметьте, что нужно — ориентир по стоимости и сроку пересчитывается сразу. Это предварительная оценка: финальную смету зафиксируем после короткого разговора, и по ходу работы она не меняется.</p>
+      </section>
+
+      <div class="order-grid wrap">
+        <div class="order-steps">
+          <section class="step">
+            <h2><span class="step-no">01</span>Направление</h2>
+            <p class="step-hint">С чего начнём?</p>
+            <div class="opts opts-2" id="dirs" role="radiogroup" aria-label="Направление"></div>
+          </section>
+
+          <section class="step" id="stepProduct">
+            <h2><span class="step-no">02</span>Что нужно сделать</h2>
+            <p class="step-hint">Выберите формат — от него считается база.</p>
+            <div class="opts opts-2" id="products" role="radiogroup" aria-label="Формат продукта"></div>
+          </section>
+
+          <section class="step">
+            <h2><span class="step-no">03</span>Сфера бизнеса</h2>
+            <p class="step-hint">На цену не влияет — нужно, чтобы я сразу понимал контекст.</p>
+            <div class="pills" id="niches" role="radiogroup" aria-label="Сфера бизнеса"></div>
+          </section>
+
+          <section class="step">
+            <h2><span class="step-no">04</span>Дополнительно</h2>
+            <p class="step-hint">Можно ничего не выбирать — базовый вариант уже рабочий.</p>
+            <div class="opts opts-2" id="extras" aria-label="Дополнительные опции"></div>
+          </section>
+
+          <section class="step">
+            <h2><span class="step-no">05</span>Сроки и поддержка</h2>
+            <p class="step-hint">Срочный запуск сжимает срок примерно в полтора раза.</p>
+            <div class="opts opts-2" id="terms" aria-label="Сроки и поддержка"></div>
+          </section>
+        </div>
+
+        <aside class="summary">
+          <div class="schema-card">
+            <div class="sum-top"><i></i> Состав проекта</div>
+            <div class="schema-frame is-empty" id="schemaFrame"></div>
+            <p class="schema-note">Это схема состава, а не макет дизайна: показывает, из каких блоков будет собран проект. Внешний вид проектируем отдельно, под ваш бренд.</p>
+          </div>
+          <div class="summary-card">
+            <div class="sum-top"><i></i> Ваш расчёт</div>
+            <div class="sum-list" id="sumList"></div>
+            <div class="sum-total">
+              <small>Ориентировочная стоимость</small>
+              <strong id="sumPrice">—</strong>
+              <span id="sumDays">Выберите направление</span>
+            </div>
+            <a class="button sum-cta" id="tgLink" href="https://t.me/pzlllv" target="_blank" rel="noreferrer">Заказать в Telegram <span>↗︎</span></a>
+            <div class="sum-alt">
+              <button type="button" class="ghost-btn" id="copyBtn">Скопировать бриф</button>
+              <a class="ghost-btn" id="mailLink" href="mailto:bilalpzlllv@gmail.com">Отправить на почту</a>
+            </div>
+            <p class="sum-note">Предварительная оценка по вашим ответам. Точную цену и срок назову после короткого разговора — бесплатно и без обязательств.</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <div class="order-bar" id="orderBar">
+      <div>
+        <small>Ориентировочно</small>
+        <strong id="barPrice">—</strong>
+      </div>
+      <a class="button" id="barLink" href="https://t.me/pzlllv" target="_blank" rel="noreferrer">Заказать <span>↗︎</span></a>
+    </div>
+
+    <footer class="wrap"><a class="brand" href="index.html"><span></span>bilal.biz</a><span>Разработка сайтов, Telegram-ботов и автоматизация для бизнеса. © 2026.</span><a href="index.html">На главную ↑︎</a></footer>
+    <script src="order.js?v=b20f5926"></script>
+    <script src="menu.js?v=eee28c9b"></script>
+  </body>
+</html>
