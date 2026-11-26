@@ -1,0 +1,425 @@
+{
+ "prices": {
+  "grechka": {
+   "magnit": 67
+  },
+  "moloko": {
+   "magnit": 82
+  },
+  "yaytsa": {
+   "magnit": 90
+  },
+  "kartofel": {
+   "magnit": 85
+  },
+  "pomidory": {
+   "magnit": 150
+  },
+  "ris": {
+   "magnit": 100
+  },
+  "ovsyanka": {
+   "magnit": 20
+  },
+  "makarony": {
+   "magnit": 67
+  },
+  "psheno": {
+   "magnit": 32
+  },
+  "chechevitsa": {
+   "magnit": 120
+  },
+  "muka": {
+   "magnit": 53
+  },
+  "hleb": {
+   "magnit": 18
+  },
+  "hleb_r": {
+   "magnit": 24
+  },
+  "kefir": {
+   "magnit": 103
+  },
+  "tvorog": {
+   "magnit": 83
+  },
+  "smetana": {
+   "magnit": 93
+  },
+  "syr": {
+   "magnit": 167
+  },
+  "maslo_sliv": {
+   "magnit": 190
+  },
+  "kurica_bedro": {
+   "magnit": 260
+  },
+  "farsh": {
+   "magnit": 110
+  },
+  "govyadina": {
+   "magnit": 1035
+  },
+  "svinina": {
+   "magnit": 400
+  },
+  "pechen": {
+   "magnit": 222
+  },
+  "sosiski": {
+   "magnit": 150
+  },
+  "mintay": {
+   "magnit": 307
+  },
+  "tunets": {
+   "magnit": 163
+  },
+  "morkov": {
+   "magnit": 23
+  },
+  "luk": {
+   "magnit": 32
+  },
+  "svekla": {
+   "magnit": 30
+  },
+  "ogurcy": {
+   "magnit": 70
+  },
+  "kabachok": {
+   "magnit": 140
+  },
+  "ovoshi_smes": {
+   "magnit": 114
+  },
+  "tomatnaya_pasta": {
+   "magnit": 79
+  },
+  "fasol": {
+   "magnit": 67
+  },
+  "goroshek": {
+   "magnit": 90
+  },
+  "yabloki": {
+   "magnit": 76
+  },
+  "banany": {
+   "magnit": 146
+  },
+  "maslo_podsoln": {
+   "magnit": 126
+  },
+  "sol": {
+   "magnit": 13
+  },
+  "manka": {
+   "magnit": 33
+  },
+  "perlovka": {
+   "magnit": 27
+  },
+  "goroh": {
+   "magnit": 32
+  },
+  "pelmeni": {
+   "magnit": 239
+  },
+  "hek": {
+   "magnit": 500
+  },
+  "ogurcy_sol": {
+   "magnit": 158
+  }
+ },
+ "updated": "2026-11-19",
+ "sources": {
+  "magnit": {
+   "date": "2026-11-08",
+   "shop": "992301",
+   "items": 45
+  },
+  "vkusvill": {
+   "date": "2026-11-19",
+   "items": 0
+  }
+ },
+ "images": {
+  "grechka": {
+   "magnit": "https://images-foodtech.magnit.ru/9-XJaT2oKB8pH9it3tnbt0HeaImoZ-wQdcB4fwK2ApM/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/b69/b69c94f85ac3657082e74896cb4bf2f2/95360d9b7b1bd528ac16e1aa0d8e5483.jpeg@webp"
+  },
+  "ris": {
+   "magnit": "https://images-foodtech.magnit.ru/xRnmpBjC3SeujnZSAAiNWiRw2wuD8c0FqddBVEjym3E/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/207/2077f28b6e86749a7b4e487b11f97529/47c4136c5f27e3a1e5fed99792dea53f.jpeg@webp"
+  },
+  "ovsyanka": {
+   "magnit": "https://images-foodtech.magnit.ru/3WGszzXmY3ZYqcex4-1QxwVn5Ageg0hJJ6LsUSFAjvM/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/0af/0afd5b97bc8f273050b34dc6e7686418/31258b9fc547cc6af1672c8f70270dfa.jpeg@webp"
+  },
+  "makarony": {
+   "magnit": "https://images-foodtech.magnit.ru/QhU2qW9vnVxFyh9-5Hh5PquoWKmp_vTJ2CzEPOCbBEc/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/b96/b967a2a0ccb9edc8948a567c6ecc855a/b5597fd6fc9c2a993625c6cdc18305c1.jpeg@webp"
+  },
+  "psheno": {
+   "magnit": "https://images-foodtech.magnit.ru/m4q930QXMWDsL-3g3TUVOfcBvnVnWeZDKLXR4r14wcQ/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/067/067bae96f3754db262390373de4f9bed/8a638705575771cb2b5a4d186de771d4.jpeg@webp"
+  },
+  "chechevitsa": {
+   "magnit": "https://images-foodtech.magnit.ru/-Qji77uz3pYHqHH3gthcFrSTNUZ31C1O_ZxZQRM7-No/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000567452/image/7c707bde54dd5ee3f20aec8fc965e15c.jpeg@webp"
+  },
+  "muka": {
+   "magnit": "https://images-foodtech.magnit.ru/0EXYW1DuK2MXxU_Q4Q1InEsUBlURmMvBjeJEqGFOd8c/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/434/43484a7627b704ff86c5cd54b4c019f0/fc49ff53acdd2d043aa2d2801776076c.jpeg@webp"
+  },
+  "hleb": {
+   "magnit": "https://images-foodtech.magnit.ru/DiQVr5w2ozVEcl0XqjPHFI4HTb_mettjbfQpyHrGwuA/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000348512/image/23ec20d005c10342be380c6c74ed34da.jpeg@webp"
+  },
+  "hleb_r": {
+   "magnit": "https://images-foodtech.magnit.ru/DSXvdmOnOXU-KWGEMT6zmMcVlNxR4YZM4NTCpVFgNzE/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000139176/image/a27e5114bd2dc49272f1a526197f7a9f.jpeg@webp"
+  },
+  "moloko": {
+   "magnit": "https://images-foodtech.magnit.ru/D0GDMbBINgDtXP0fVnJLDP75gWa-vmCz-wZB5OHfU0M/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000035016/image/59d544610c374ab84149451fff049ffb.jpeg@webp"
+  },
+  "kefir": {
+   "magnit": "https://images-foodtech.magnit.ru/rwzZk1RvaMnBmycpTKDxrSK2e0LV3VP_Vn53xDJBMao/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/c74/c74f7118b466dc3a14cdcac7e3b4316d/cbfc7056473d3a3321ff085f1e40355e.jpeg@webp"
+  },
+  "tvorog": {
+   "magnit": "https://images-foodtech.magnit.ru/NfUAvOryR3zdLdrd6V_cMosSS45zmFg0jgD_MTlwz3Y/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/28d/28d97858d6cce72be6a61625d53ff01a/eb936135c9b33278b311f959af9bdee3.jpeg@webp"
+  },
+  "smetana": {
+   "magnit": "https://images-foodtech.magnit.ru/MlJtziAHCkIMN1aBbXccWf6AmCoDp6LT5ZyaTguU6C8/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000237597/image/67ef015098c928e0669bff3cb62e28f5.jpeg@webp"
+  },
+  "syr": {
+   "magnit": "https://images-foodtech.magnit.ru/xKtS6dnpObWDuYS3boNyXq6K5OufJE9vX6SZkel_ZHQ/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/a0c/a0c3d50a58eebad589d358b5cd9cb131/95da0e0df14a53ed77eaec594bce918d.png@webp"
+  },
+  "maslo_sliv": {
+   "magnit": "https://images-foodtech.magnit.ru/Cwegf0aBwWFtBglnY4hb_E2wwGciVjg1xQIzIH24J28/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/266/2661a8463225b063201fa2f336ac8de1/47eba4a7c51db6f99299cd81349ccf98.jpeg@webp"
+  },
+  "yaytsa": {
+   "magnit": "https://images-foodtech.magnit.ru/36yPg9_8zNzV0hEKQS-oIVci-rZKpLYuPYR9J3D0fHE/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/3454700001/image/1b60422a778ebb953412c9ebe3fd513b.jpeg@webp"
+  },
+  "kurica_bedro": {
+   "magnit": "https://images-foodtech.magnit.ru/hPmF7Fqdy1cYf7hbCpd-NS1Z0uoUmJ_YuhtKoq1DgOg/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1999900060/image/f3c43508eb8574407c1c44446ab7ca24.jpeg@webp"
+  },
+  "farsh": {
+   "magnit": "https://images-foodtech.magnit.ru/tJfuxC9P3Ebq6GR2FdkJtWoXlyc-J3cbBzCynAog728/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1959990014/image/6cfeaeb8b87c954aee84cfc7cb9f595d.jpeg@webp"
+  },
+  "govyadina": {
+   "magnit": "https://images-foodtech.magnit.ru/EZEyjli7DkQZTXy8U71MjkhT49Ihdx4qLHRs9ynTWAc/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1149990005/image/47c8e1d3afb483fdcf4212d7b5efc09d.jpeg@webp"
+  },
+  "svinina": {
+   "magnit": "https://images-foodtech.magnit.ru/I5zABkvUtrlMvT8OBPmfyA9OiSlXKBv5nmcdLcUHDTo/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1149990037/image/643cd618fe1ed0076b4241b9ac4b81e0.jpeg@webp"
+  },
+  "pechen": {
+   "magnit": "https://images-foodtech.magnit.ru/SXsyt6XYEI31E0y8zo1yB8rOCIkAs-zK-HwzicVWs1c/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/9a9/9a9c04e9609c3ba1cd43a2b937f8b500/dd67fead705e198e6c435099c3fce0fd.jpeg@webp"
+  },
+  "sosiski": {
+   "magnit": "https://images-foodtech.magnit.ru/NJr--26aSl6fC1JQEwB-AqMas2PFpvirk4QJ5KyB9E4/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/502/502d294e72bb9986307334e0b0d82e0a/6536a1b03e7925de490761c9960accd2.jpeg@webp"
+  },
+  "mintay": {
+   "magnit": "https://images-foodtech.magnit.ru/nO94qh7Z2p7zKqWHz5CIosv11NXkUQr4VZZqG8hGJ2E/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000239562/image/f3e72212d895c8b499b9bfb0b08dfa85.jpeg@webp"
+  },
+  "tunets": {
+   "magnit": "https://images-foodtech.magnit.ru/mV03LLb1k3io9941PkP3ahevti-6OTa8SjE-oxOUcDQ/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/7bd/7bda29c1ee266921546f5cec2a75c99a/e43f3cf030858c4a92bcfc4b08bb81a5.jpeg@webp"
+  },
+  "kartofel": {
+   "magnit": "https://images-foodtech.magnit.ru/tglsMbIxh5m2LMwgq2dYwlf6ZYHzWV6cuwRYz6aXCLc/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/8000090135/image/e1f1cf646b1154552b27d1031a87de75.jpeg@webp"
+  },
+  "morkov": {
+   "magnit": "https://images-foodtech.magnit.ru/fRejBuuMjCtuGBwDgM-QWlgFgVG_szPzsex46_BFzrI/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/9072651201/image/2d395194dcf2013cf26330168cc98dd5.jpeg@webp"
+  },
+  "luk": {
+   "magnit": "https://images-foodtech.magnit.ru/5sroHIdWLxDlUpKzfHIr7_aGEUG6v76Xzx75qpTQmNY/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/9072651204/image/9e5a061f641a4f5bfeee889b861e5dc4.jpeg@webp"
+  },
+  "svekla": {
+   "magnit": "https://images-foodtech.magnit.ru/SR5X9tWQMYOOMd4Lw97_kICraLIjSC3DwFuFHg42rEI/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/3412070011/image/81646e34f23cd4ecb661862fcf4dd913.jpeg@webp"
+  },
+  "pomidory": {
+   "magnit": "https://images-foodtech.magnit.ru/15hO9MivFi6nf4j2MtLaCO-Nxhva9agymtHyiXfXRkU/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/3413351104/image/ba504f751cd51d32a08de48898136f1e.jpeg@webp"
+  },
+  "ogurcy": {
+   "magnit": "https://images-foodtech.magnit.ru/id-jL4Mimt7hEXTzsBGqBGhbW8w3VNWWnOfGX-K0U_U/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/3412110001/image/42ef2cf0f7d185f6ec63495d68b08b09.jpeg@webp"
+  },
+  "kabachok": {
+   "magnit": "https://images-foodtech.magnit.ru/Cw2dI6LJAOTahAaWyV845qmh41qwRw9XQGRrfqOsNyg/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/3412080003/image/e33a83b24f5b20c6095ac2e8c5f7cdfc.jpeg@webp"
+  },
+  "ovoshi_smes": {
+   "magnit": "https://images-foodtech.magnit.ru/5OWlZ2HJS4FZFQv1IDEFdIHHEjXJSlQ6dgIac3kQZso/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000555579/image/adb796568c9510b914497a6e17f41202.jpeg@webp"
+  },
+  "tomatnaya_pasta": {
+   "magnit": "https://images-foodtech.magnit.ru/X_8Jez6l1lKpr92mAd0AHLfGdu23WBE8ftFPviyRM84/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/feb/febca64021a38e3871fc3fe69ddb99b5/1683033e0a6ad9afa00745fd3e3fe873.jpeg@webp"
+  },
+  "fasol": {
+   "magnit": "https://images-foodtech.magnit.ru/-zzqFUiV1OJvSXK4WFUlrPo3KHZfFgLPjmv6eKMUFUY/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000189502/image/f42694a0cda4a0a55266cbc115c8e5c0.jpeg@webp"
+  },
+  "goroshek": {
+   "magnit": "https://images-foodtech.magnit.ru/Ux1GF0fg2kgF5r2ln7_ZAuwzaGQc_DimjbYTlQCEldU/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000542472/image/9c85022441dc22c2cc36b05f6a4b95e4.jpeg@webp"
+  },
+  "yabloki": {
+   "magnit": "https://images-foodtech.magnit.ru/dvAhptZ0QcCgzSTNfSS-eJARGawTUQAIqr753lalE6I/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1444500129/image/8afadb5c7048580a22f7b3745e9c345c.jpeg@webp"
+  },
+  "banany": {
+   "magnit": "https://images-foodtech.magnit.ru/sFpbAywA4nShph-kvIsnoJtVIUOuY_E30XNCKHV1QsA/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/9072651501/image/c7a3ab766489eef72db9699cac8debb0.jpeg@webp"
+  },
+  "maslo_podsoln": {
+   "magnit": "https://images-foodtech.magnit.ru/doDOdv9ZUm2DYrRJi0lHF5qa4qs7a3aoNaWXW81zmrw/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/fb6/fb6e2d91c44e325ddb6f042d63fcedd2/c6e7fbb3951e2289116b47d36491faee.jpeg@webp"
+  },
+  "sol": {
+   "magnit": "https://images-foodtech.magnit.ru/YnLPx-OV2InvPgjQw37TiPsiTVvuCNbNUFdOQJwCZKY/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/74d/74d0f4eb3f1e792ff25ad88d52ec073f/e7ad914963e45cadf10213d5ca9db83e.jpeg@webp"
+  },
+  "manka": {
+   "magnit": "https://images-foodtech.magnit.ru/9jiz0Cgo7-rxkJEJENyGvQaekWCX0_7wF5PLWpqc5Gc/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/ae6/ae6b9d0e70bcc04f32a901b0addd3cbf/3a2735e72bcb33f44f46bce97c15902c.jpeg@webp"
+  },
+  "perlovka": {
+   "magnit": "https://images-foodtech.magnit.ru/Yfk542-13Z0vEsN68NWANAZxfks8BFxTkZrQMYBfjqQ/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/7a7/7a78e814ecb8d452d903bc16fe57a84b/47ccc44cf78f436cbdbfe756c63d2da2.jpeg@webp"
+  },
+  "goroh": {
+   "magnit": "https://images-foodtech.magnit.ru/g_mcXQ3g2uNDy6KqtPaTIbarplc9kFjxKK3sby6bZrM/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/uf/fc0/fc03e94ed5a8ed965530a8d0e6ec56b8/932d2a7eb234b43163bd0117c0c8920c.jpeg@webp"
+  },
+  "pelmeni": {
+   "magnit": "https://images-foodtech.magnit.ru/d1TDhgySeTFKD4olch5ljM-a-YgbATtVmDlg2L7LZpc/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/1000373743/image/5266e664598ae8bed5e4582d07047567.jpeg@webp"
+  },
+  "hek": {
+   "magnit": "https://images-foodtech.magnit.ru/QlPG7upGJq9zQQrGfD1FDTj_7kL-mwQ_4zhBApJWP9Q/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/8000087093/image/32b16295499eec75b65e1d56b253fbf9.jpeg@webp"
+  },
+  "ogurcy_sol": {
+   "magnit": "https://images-foodtech.magnit.ru/Va11FLpTEp4SPdDeXkyMCWQa_VncbSJy8KEd4ID0NQQ/rs:fit:1600:1600/plain/s3://img-dostavka/catalog/pim/goods/8000012557/image/17f2f055952ca1c1daa5266dd6b57bc2.jpeg@webp"
+  }
+ },
+ "names": {
+  "grechka": {
+   "magnit": "Крупа гречневая ядрица Семейные секреты/Магнит 800г в ассортименте"
+  },
+  "ris": {
+   "magnit": "Рис Семейные секреты/Магнит шлифованный круглозерный 800г"
+  },
+  "ovsyanka": {
+   "magnit": "Хлопья Моя цена Геркулес овсяные 400г"
+  },
+  "makarony": {
+   "magnit": "Макароны Шебекинские №366 Спирали 450г"
+  },
+  "psheno": {
+   "magnit": "Крупа Пшено 800г"
+  },
+  "chechevitsa": {
+   "magnit": "Чечевица Красная колотая Premiere of Taste 450г"
+  },
+  "muka": {
+   "magnit": "Мука Пшеничная 2кг в ассортименте"
+  },
+  "hleb": {
+   "magnit": "Хлеб Пшеничный Моя цена 550г"
+  },
+  "hleb_r": {
+   "magnit": "Хлеб Бездрожжевой ржаной 500г"
+  },
+  "moloko": {
+   "magnit": "Молоко пастеризованное Домик в деревне 2.5% 930мл"
+  },
+  "kefir": {
+   "magnit": "Кефир Коровка из Кореновки 1% 900г"
+  },
+  "tvorog": {
+   "magnit": "Творог Коровка из Кореновки 5% 180г"
+  },
+  "smetana": {
+   "magnit": "Сметана Домик в Деревне 15% 300г"
+  },
+  "syr": {
+   "magnit": "Сыр Николаевские сыроварни Российский 50% 180г"
+  },
+  "maslo_sliv": {
+   "magnit": "Масло сливочное Коровка из Кореновки 82.5% 170г"
+  },
+  "yaytsa": {
+   "magnit": "Куриное яйцо C1 10шт в ассортименте"
+  },
+  "kurica_bedro": {
+   "magnit": "Бедро куриное для запекания"
+  },
+  "farsh": {
+   "magnit": "Фарш Домашний натуральный"
+  },
+  "govyadina": {
+   "magnit": "Говядина тазобедренная часть без кости крупнокусковая"
+  },
+  "svinina": {
+   "magnit": "Лопатка свиная крупнокусковая"
+  },
+  "pechen": {
+   "magnit": "Печень цыпленка-бройлера Благояр замороженная 900г"
+  },
+  "sosiski": {
+   "magnit": "Сосиски Великолукский МК Молочные 330г"
+  },
+  "mintay": {
+   "magnit": "Минтай Магнит/Северная гавань филе 600г"
+  },
+  "tunets": {
+   "magnit": "Тунец полосатый салатный натуральный Рыбарь 170г"
+  },
+  "kartofel": {
+   "magnit": "Картофель мытый 2кг"
+  },
+  "morkov": {
+   "magnit": "Морковь"
+  },
+  "luk": {
+   "magnit": "Лук репчатый"
+  },
+  "svekla": {
+   "magnit": "Свекла"
+  },
+  "pomidory": {
+   "magnit": "Томаты Flamenco сливовидные"
+  },
+  "ogurcy": {
+   "magnit": "Огурцы среднеплодные"
+  },
+  "kabachok": {
+   "magnit": "Кабачки"
+  },
+  "ovoshi_smes": {
+   "magnit": "Смесь Green Ribbon 8 овощей быстрозамороженная 700г"
+  },
+  "tomatnaya_pasta": {
+   "magnit": "Томатная паста Кухмастер 480г"
+  },
+  "fasol": {
+   "magnit": "Фасоль Моя цена красная натуральная 360г"
+  },
+  "goroshek": {
+   "magnit": "Зелёный горошек Green Ribbon 400г"
+  },
+  "yabloki": {
+   "magnit": "Яблоки фасованные"
+  },
+  "banany": {
+   "magnit": "Бананы"
+  },
+  "maslo_podsoln": {
+   "magnit": "Масло подсолнечное Слобода рафинированное 1л"
+  },
+  "sol": {
+   "magnit": "Соль поваренная пищевая 1кг в ассортименте"
+  },
+  "manka": {
+   "magnit": "Крупа Манная 800г"
+  },
+  "perlovka": {
+   "magnit": "Крупа Перловая 800г"
+  },
+  "goroh": {
+   "magnit": "Горох колотый 800г"
+  },
+  "pelmeni": {
+   "magnit": "Пельмени Sибирская Коллекция Сочные с фаршем на молоке 700г"
+  },
+  "hek": {
+   "magnit": "Медальоны из филе хека Своя Рыбка 400г"
+  },
+  "ogurcy_sol": {
+   "magnit": "Огурцы Green Ribbon маринованные 680г"
+  }
+ }
+}
