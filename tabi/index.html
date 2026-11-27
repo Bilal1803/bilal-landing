@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#EEF0F3">
 <meta name="color-scheme" content="light dark">
-<script src="appearance.js?v=preferences-1"></script>
+<script src="appearance.js?v=icons-1"></script>
 <title>tabi: продукты по бюджету, меню и КБЖУ</title>
 <link rel="icon" type="image/svg+xml" href="brand/tabi-app-icon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -715,9 +715,22 @@ body.sheet-on .tabbar{scale:.9;opacity:0;transition:scale .4s var(--spring),opac
   .onb2 h1{font-size:28px;margin-bottom:8px}.onb2 p.sub{font-size:14px;margin-bottom:10px}.onb2 .ostats div{padding:9px 12px}.onb2 .ostats b{font-size:18px}.onb2 .ostats{margin-bottom:10px}.onb2 .fine{margin-top:8px}
   .gdish img{width:40px;height:40px}.gdish{padding:6px 10px 6px 6px}}
 </style>
-<link rel="stylesheet" href="personalization.css?v=preferences-1">
+<link rel="stylesheet" href="personalization.css?v=icons-1">
 </head>
 <body>
+<svg class="theme-icon-filters" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>
+  <filter id="tabi-icon-accent" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+    <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -.9 1 -.1 0 -.035" result="green"/>
+    <feComponentTransfer in="green" result="mask"><feFuncA type="linear" slope="8"/></feComponentTransfer>
+    <feComposite in="mask" in2="SourceGraphic" operator="in" result="mask"/>
+    <feColorMatrix in="SourceGraphic" type="saturate" values="0" result="shade"/>
+    <feFlood style="flood-color:var(--lime)" result="accent"/>
+    <feBlend in="shade" in2="accent" mode="multiply" result="tinted"/>
+    <feComposite in="tinted" in2="mask" operator="in" result="colored"/>
+    <feComposite in="SourceGraphic" in2="mask" operator="out" result="original"/>
+    <feComposite in="colored" in2="original" operator="arithmetic" k2="1" k3="1"/>
+  </filter>
+</defs></svg>
 <div class="app" id="app"></div>
 <nav class="tabbar" id="tabbar" aria-label="Разделы"></nav>
 <div id="layer"></div>
@@ -725,7 +738,7 @@ body.sheet-on .tabbar{scale:.9;opacity:0;transition:scale .4s var(--spring),opac
 <script src="config.js?v=tabi-1"></script>
 <script src="geo.js?v=tabi-1"></script>
 <script src="motion.js?v=tabi-1"></script>
-<script src="personalization.js?v=preferences-1"></script>
-<script src="app.js?v=preferences-1"></script>
+<script src="personalization.js?v=icons-1"></script>
+<script src="app.js?v=icons-1"></script>
 </body>
 </html>

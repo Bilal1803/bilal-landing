@@ -1,5 +1,17 @@
 /* Palettes retain the existing semantic tokens throughout the application. */
 :root{--accentText:#3F5700;--avatar-outline:rgba(0,0,0,.10)}
+/* Recolor only the green accents of illustrations, preserving skin, metal and shadows. */
+:root:is([data-accent="blue"],[data-accent="pink"]) img[src^="img2/ui/"]{filter:url('#tabi-icon-accent')}
+.theme-icon-filters{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+.food-groups{margin:8px 0 24px}
+.food-group{border-bottom:1px solid var(--line);padding:0 0 12px;margin:0 0 12px}
+.food-group>summary{display:flex;align-items:center;gap:10px;list-style:none;cursor:pointer;min-height:44px;font-size:15px;font-weight:650}
+.food-group>summary::-webkit-details-marker{display:none}
+.food-group>summary small{margin-left:auto;color:var(--ink2);font-weight:400;font-size:12px}
+.food-group>summary .chev{flex:none;color:var(--ink3)}
+.food-group[open]>summary .chev{transform:rotate(180deg)}
+.food-group>.pills{margin-top:8px}
+.food-group>summary:focus-visible{outline:2px solid var(--lime2);outline-offset:3px;border-radius:8px}
 :root[data-accent="blue"]{--lime:#9CC8FF;--lime2:#6EA9F4;--limeInk:#102E54;--limeBg:#E8F2FF;--accentText:#234F86}
 :root[data-accent="pink"]{--lime:#FFB3D9;--lime2:#F48CBE;--limeInk:#521D3A;--limeBg:#FDEBF4;--accentText:#8C345E}
 :root[data-theme="dark"]{--bg:#101217;--card:#1B1F27;--ink:#F3F5F8;--ink2:#AFB7C5;--ink3:#909BAE;--line:rgba(255,255,255,.09);--fill:#252B36;--fill2:#343D4B;--dark:#2C3442;--dark2:#394353;--red:#FF858E;--redBg:#3B2028;--pro:#B8A5FF;--fat:#FFAD7A;--carb:#73DED0;--sh:0 1px 2px rgba(0,0,0,.16),0 12px 30px -16px rgba(0,0,0,.6);--limeBg:#29351B;--accentText:#D6FF42;--avatar-outline:rgba(255,255,255,.1)}

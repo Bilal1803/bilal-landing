@@ -958,6 +958,14 @@ function preferenceProducts(){
     .sort((a,b)=>Number(S.dislikes.includes(b.id))-Number(S.dislikes.includes(a.id))||a.n.localeCompare(b.n,'ru'));
 }
 let FQ='';
+const FOOD_CATEGORIES=[['Овощи','Овощи'],['Фрукты','Фрукты'],['Мясо','Мясо и птица'],['Рыба','Рыба'],['Молочное','Молочные продукты'],['Яйца','Яйца'],['Крупы','Крупы и макароны'],['Хлеб','Хлеб'],['Бакалея','Бакалея и консервы']];
+function preferenceProductGroups(prods){
+  return FOOD_CATEGORIES.map(([cat,title])=>{
+    const items=prods.filter(p=>p.cat===cat);if(!items.length)return '';
+    const selected=items.filter(p=>S.dislikes.includes(p.id)).length,key='food:'+cat;
+    return `<details class="food-group" data-k="${key}" ${dOpen(key,true)?'open':''}><summary><span>${title}</span><small>${selected?'Исключено '+selected+' из ':''}${items.length}</small><span class="chev">${I.chev}</span></summary><div class="pills wrapc">${items.map(p=>`<button class="pill no tap ${S.dislikes.includes(p.id)?'on':''}" data-act="dislike" data-v="${p.id}" aria-pressed="${S.dislikes.includes(p.id)}">${esc(p.n)}</button>`).join('')}</div></details>`;
+  }).join('');
+}
 function favoriteChoices(){
  const list=uniqueDishes(RECIPES.filter(r=>!excluded(r))).filter(r=>norm(r.n).includes(norm(FQ)));
  return list.length?list.sort((a,b)=>Number(S.likes.includes(b.id))-Number(S.likes.includes(a.id))).map(r=>`<button class="pill tap ${S.likes.includes(r.id)?'on':''}" data-act="like" data-v="${r.id}" aria-pressed="${S.likes.includes(r.id)}"><img src="img2/dish/${r.id}.jpg" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;margin-left:-10px">${esc(r.n)}</button>`).join(''):'<p class="foot">Подходящих блюд не найдено. Измените поиск или ограничения.</p>';
@@ -972,7 +980,7 @@ function pPrefs(){
   <div class="wish"><input class="field" id="wishIn" type="text" autocomplete="off" enterkeyhint="search" placeholder="Что не любите? Например: каши на воде" value="${esc(WQ)}">
   <div id="wishRes">${wishRes()}</div></div>
   ${nd.length?`<span class="lbl">Не предлагаем</span><div class="pills wrapc" style="margin-bottom:18px">${nd.map(id=>`<button class="pill tap" data-act="nodishDel" data-v="${id}" title="Снова предлагать">${esc(RID[id].n)} <span style="color:var(--ink3)">✕</span></button>`).join('')}</div>`:''}
-  <span class="lbl">Не ем продукты</span><p class="foot">Исключаем из всех блюд. Пельмени, сосиски и фарш — сразу всех видов. Продукты, запрещённые ограничениями выше, здесь скрыты.</p><div class="pills wrapc" style="margin-bottom:18px" data-clamp="10" data-ck="dislikes">${prods.map(p=>`<button class="pill no tap ${S.dislikes.includes(p.id)?'on':''}" data-act="dislike" data-v="${p.id}">${p.n}</button>`).join('')}</div>
+  <span class="lbl">Не ем продукты</span><p class="foot">Исключаем из всех блюд. Пельмени, сосиски и фарш — сразу всех видов. Продукты, запрещённые ограничениями выше, здесь скрыты.</p><div class="food-groups">${preferenceProductGroups(prods)}</div>
   <span class="lbl">Любимые блюда, будут чаще</span>
   <p class="foot">Здесь только подходящие блюда. Ограничения важнее избранного; временно неподходящие любимые блюда сохранятся и вернутся после снятия ограничения.</p>
   <input class="field" id="favoriteIn" type="search" aria-label="Поиск любимых блюд" placeholder="Найти любимое блюдо" value="${esc(FQ)}">
