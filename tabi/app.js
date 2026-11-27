@@ -669,7 +669,7 @@ function vHome(){
   const nd=S.plan.days.length,per=nd===7?'неделю':nd===30?'месяц':nd+' '+plural(nd,'день','дня','дней');
   const m=S.family[mi]||me,goal=m.goal==='lose'?'худеет':m.goal==='gain'?'набирает':'держит вес';
   let h=`<div class="screen">
-  <div class="top"><button class="ava tap" data-act="tab" data-v="profile" aria-label="Профиль">${ini(me.name)}</button>
+  <div class="top"><button class="ava tap" data-act="tab" data-v="profile" aria-label="Профиль">${TabiPersonal.avatar(me)}</button>
     <div class="who"><span>${greet()}${me.name&&me.name!=='Я'?', '+esc(me.name):''}</span><b>${todayLabel()}</b></div>
     ${S.dirty||planOver()?'':`<button class="rb tap" data-act="fab" aria-label="Другой вариант меню" title="Другой вариант меню">${I.spark}</button>`}</div>
   ${planOver()?`<div class="banner"><div class="t">Меню закончилось ${dayDate(S.plan.days.length-1).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}. Собрать на ${per}?</div><button data-act="fab">Собрать</button></div>`
@@ -867,7 +867,7 @@ document.addEventListener('input',e=>{if(e.target.id==='rq'){RQ=e.target.value;r
 function pFamily(){
   const o=(v,arr)=>arr.map(([k,n])=>`<option value="${k}"${String(v)===String(k)?' selected':''}>${n}</option>`).join('');
   return S.family.map((m,i)=>{const t=target(m);return `<div class="member">
-    <div class="mh"><span class="mava">${esc((m.name||'?').trim().charAt(0).toUpperCase()||'?')}</span>
+    <div class="mh"><button type="button" class="mava avatar-button tap" data-personal="avatar-open" data-member="${i}" aria-label="Изменить аватар ${esc(m.name||'участника семьи')}">${TabiPersonal.avatar(m)}</button>
       <input data-f="${i}" data-k="name" value="${esc(m.name)}" placeholder="Имя">
       ${S.family.length>1?`<button class="rb" data-act="delMember" data-v="${i}" aria-label="Удалить: ${esc(m.name||'без имени')}">${I.x}</button>`:''}</div>
     ${seg('sex:'+i,m.sex,[['m','Мужчина'],['f','Женщина']])}
@@ -989,6 +989,8 @@ function vProfile(){
   const sec=(title,body,k,def,hint,ic)=>k?`<details class="sec" data-k="p:${k}" ${dOpen('p:'+k,def)?'open':''}><summary class="h2">${ic?`<img class="sico" src="img2/ui/${ic}.webp" alt="">`:''}${title}<small>${hint||''}</small><span class="chev">${I.chev}</span></summary><div class="secb">${body}</div></details>`:`<div class="h2">${title}</div>${body}`;
   const ri=(cls,ic)=>`<span class="ri ${cls}">${ic}</span>`;
   return `<div class="screen"><div class="top"><div class="who"><span>Семья, бюджет, магазины</span><b class="lt">Профиль</b></div><img class="brand-signature" src="brand/tabi-wordmark.svg" alt="tabi"></div>
+  ${TabiPersonal.profileCard(S.family[0])}
+  ${sec('Оформление',TabiPersonal.appearancePanel(),'appearance',false,TabiPersonal.appearanceHint())}
   ${sec('Семья',pFamily(),'fam',false,S.family.length+' '+plural(S.family.length,'человек','человека','человек'),'family')}
   ${sec('Бюджет',pBudget(),'bud',false,rub(S.budget),'money')}
   ${sec('Магазины',pStores(),'st',false,S.home?esc(S.home.label.split(' · ')[0]):activeStores().length+' вкл.','cart')}
@@ -1247,7 +1249,7 @@ function bindInputs(){
     el.oninput=el.onchange=()=>{const i=+el.dataset.f,k=el.dataset.k,m=S.family[i];
       m[k]=['age','weight','height','act'].includes(k)?+el.value:el.value;markDirty();
       const kc=$('#kc'+i);if(kc)kc.innerHTML=kcLine(m,target(m));
-      if(k==='name'){const av=el.parentNode.querySelector('.mava');if(av)av.textContent=(el.value.trim().charAt(0)||'?').toUpperCase()}};
+      if(k==='name'){const av=el.parentNode.querySelector('.mava');if(av&&!TabiPersonal.avatarSrc(m.avatar))av.textContent=(el.value.trim().charAt(0)||'?').toUpperCase()}};
   });
   const bi=$('#budgetIn'),br=$('#budgetRange');
   const setB=(v,src)=>{S.budget=Math.max(0,Math.round(+v||0));markDirty();
