@@ -988,7 +988,7 @@ function vProfile(){
   /* разделы сворачиваются; при входе в профиль все свёрнуты — сводка видна в шапке раздела */
   const sec=(title,body,k,def,hint,ic)=>k?`<details class="sec" data-k="p:${k}" ${dOpen('p:'+k,def)?'open':''}><summary class="h2">${ic?`<img class="sico" src="img2/ui/${ic}.webp" alt="">`:''}${title}<small>${hint||''}</small><span class="chev">${I.chev}</span></summary><div class="secb">${body}</div></details>`:`<div class="h2">${title}</div>${body}`;
   const ri=(cls,ic)=>`<span class="ri ${cls}">${ic}</span>`;
-  return `<div class="screen"><div class="top"><div class="who"><span>Семья, бюджет, магазины</span><b class="lt">Профиль</b></div></div>
+  return `<div class="screen"><div class="top"><div class="who"><span>Семья, бюджет, магазины</span><b class="lt">Профиль</b></div><img class="brand-signature" src="brand/tabi-wordmark.svg" alt="tabi"></div>
   ${sec('Семья',pFamily(),'fam',false,S.family.length+' '+plural(S.family.length,'человек','человека','человек'),'family')}
   ${sec('Бюджет',pBudget(),'bud',false,rub(S.budget),'money')}
   ${sec('Магазины',pStores(),'st',false,S.home?esc(S.home.label.split(' · ')[0]):activeStores().length+' вкл.','cart')}
