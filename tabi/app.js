@@ -912,7 +912,7 @@ function pBudget(){
   <div class="list" style="margin-top:20px"><label class="row"><span class="ri">${I.fork}</span><span class="rl">Перекус<div>Четвёртый приём пищи</div></span><input type="checkbox" class="sw" data-act="snack" ${S.snack?'checked':''}></label></div>`;
 }
 function pStores(){
-  return `${geoPanel()}${S.home?'':`<span class="lbl">Или только город</span><select class="field" id="citySel" style="margin-bottom:16px">${Object.keys(CITY).map(c=>`<option${c===S.city?' selected':''}>${c}</option>`).join('')}</select>`}
+  return `${geoPanel()}
   <span class="lbl">Класс магазинов</span>
   <div class="tiers">${TK.map(t=>`<button class="tcard tap ${S.tiers[t]?'on':''}" data-act="tier" data-v="${t}"><img class="tico" src="img2/ui/${{eco:'coin',mid:'middle',prem:'gem',dlv:'bags'}[t]}.webp" alt=""><b>${TIERS[t].n}</b><span>${TIERS[t].d}</span><i class="chk">${I.check}</i></button>`).join('')}</div>
   ${TK.map(t=>{const ss=STORES.filter(s=>s.tier===t);return `<div class="tgroup ${S.tiers[t]?'':'off'}"><span class="lbl">${TIERS[t].n}${S.tiers[t]?'':' · выключен'}</span><div class="list">${ss.map(s=>{const av=cityStores().includes(s.id),en=av&&S.tiers[t];return `<label class="row">${smark(s.id)}<span class="rl">${s.n}${pbadge(s.id)}${!av?`<div>${nearOn()?'Нет рядом с домом (до 3 км)':'Нет в этом городе'}</div>`:nearOn()&&S.near[s.id]?`<div>${fmtD(S.near[s.id].d)}${S.near[s.id].addr?' · '+esc(S.near[s.id].addr):''}</div>`:s.tier==='dlv'?`<div>${dlvKnown(s.id)?'Возит в '+esc(homeTown()):dlvOk(s.id)?'Включено вами':dlvStatus(s.id)==='no'?'По их списку в '+esc(homeTown())+' не возят. Если возят, включите':'Укажите адрес, и мы проверим, возит ли'}</div>`:''}</span><input type="checkbox" class="sw" data-act="store" data-v="${s.id}" ${S.stores[s.id]&&en&&dlvOk(s.id)?'checked':''} ${en?'':'disabled'}></label>`}).join('')}</div></div>`}).join('')}
@@ -1296,7 +1296,6 @@ function bindInputs(){
   /* поле с пробелами между разрядами: «20 000» — берём только цифры и сразу форматируем */
   if(bi)bi.oninput=()=>{const d=bi.value.replace(/\D/g,'').slice(0,7);setB(d,'in');bi.value=d?bfmt(+d):''};
   if(br)br.oninput=()=>setB(br.value,'range');
-  const cs=$('#citySel');if(cs)cs.onchange=()=>{S.city=cs.value;markDirty();rerenderBody()};
   const fi=$('#favoriteIn');if(fi)fi.oninput=()=>{FQ=fi.value;$('#favoriteChoices').innerHTML=favoriteChoices()};
   const wi=$('#wishIn');if(wi)wi.oninput=()=>{WQ=wi.value;$('#wishRes').innerHTML=wishRes()};
   const pp=$('#panP');if(pp)pp.onchange=()=>{$('#panU').textContent=pp.value==='yaytsa'?'Сколько, шт':LIQ.has(pp.value)?'Сколько, мл':'Сколько, г'};
@@ -1410,7 +1409,7 @@ const A={
   store:a=>{const v=a.dataset.v;S.stores[v]=a.checked;if(ST(v)==='dlv'&&!dlvKnown(v)){S.dlvOn=Object.assign({},S.dlvOn,{[v]:a.checked})}markDirty();rerenderBody()},
   geoLocate:()=>geoLocate(),
   retryNear:()=>{if(!GBUSY&&S.home){findNear();rerenderBody()}},
-  clearHome:()=>{S.home=null;S.near=null;GBUSY=false;markDirty();rerenderBody()},
+  clearHome:()=>{const h=S.home;setHome(h?.lat,h?.lon,{scope:'city',city:h?.town||S.city,region:h?.region})},
   prep:a=>{S.prep=+a.dataset.v;markDirty();rerenderBody()},
   prepB:a=>{S.prepB=a.checked;markDirty();rerenderBody()},
   kit:a=>{const k=kit();k[a.dataset.v]=!k[a.dataset.v];S.kit=k;markDirty();rerenderBody()},

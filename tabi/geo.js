@@ -16,6 +16,7 @@ function loadYmaps(){
 /* адрес из ответа геокодера Яндекса: улица, дом, город */
 function yaProps(g){
   return{street:g.getThoroughfare()||g.properties.get('name'),housenumber:g.getPremiseNumber()||'',
+    scope:g.properties.get('metaDataProperty.GeocoderMetaData.kind')==='locality'?'city':'address',
     city:(g.getLocalities()||[])[0]||(g.getAdministrativeAreas()||[])[0]||'',region:(g.getAdministrativeAreas()||[])[0]||''};
 }
 async function yaSuggest(q){
@@ -65,30 +66,42 @@ function haversine(a,b,c,d){const R=6371e3,r=Math.PI/180,x=Math.sin((c-a)*r/2)**
 /* подпись адреса из ответа Photon: улица и дом, без квартир и индексов */
 function addrLabel(p){const st=[p.street||p.name,p.housenumber].filter(Boolean).join(', ');return [st,p.city||p.town||p.village||p.state].filter(Boolean).join(' · ')}
 function cityOf(p){const c=p.city||p.town||p.village||p.state||'';return Object.keys(CITY).find(k=>k!=='Другой город'&&c.includes(k))||'Другой город'}
+const geoNorm=s=>String(s||'').toLocaleLowerCase('ru').replace(/ё/g,'е').trim();
+const cityPlace=p=>p.scope==='city'||(!p.housenumber&&!p.street&&(['city','town','village','locality'].includes(p.type)||p.osm_key==='place'));
+function localCities(q){return Object.keys(CITY).filter(c=>c!=='Другой город'&&geoNorm(c).startsWith(geoNorm(q))).map(c=>({title:c,sub:'Город · магазины по всему городу',pick:async()=>[null,null,{name:c,city:c,scope:'city'}]}))}
+function showPlaces(items,q,message,surface=$('#addrSug')){
+  const sug=$('#addrSug');if(!sug||sug!==surface||$('#addrIn')?.value.trim()!==q)return;
+  sug.innerHTML=items.length?items.map((it,i)=>`<button type="button" class="tap" role="option" data-i="${i}"><b>${esc(it.title)}</b><span>${esc(it.sub)}</span></button>`).join(''):`<div class="none">${message||'Не нашли. Введите город или уточните улицу и дом.'}</div>`;
+  sug.querySelectorAll('button').forEach(b=>b.onclick=async()=>{
+    sug.innerHTML='';clearTimeout(GTIMER);
+    try{const[la,lo,p]=await items[+b.dataset.i].pick();if($('#addrIn')?.value.trim()!==q)return;setHome(la,lo,p)}catch(e){toast('Не удалось найти это место на карте','shopping_cart')}
+  });
+}
 
 /* блок для экрана «Где покупаете?» и профиля */
 function geoPanel(){
   const h=S.home,near=S.near||{};
   const list=h?OFFLINE.filter(id=>near[id]).sort((a,b)=>near[a].d-near[b].d):[];
-  return `<span class="lbl">Ваш адрес</span>
-  <div class="addr"><input class="field" id="addrIn" type="text" autocomplete="off" enterkeyhint="search" placeholder="Город, улица и дом, без квартиры" value="${h?esc(h.label):''}">
+  return `<span class="lbl">Где искать магазины</span>
+  <div class="addr"><input class="field" id="addrIn" type="text" aria-label="Город, улица или адрес" autocomplete="off" enterkeyhint="search" placeholder="Город или город, улица и дом" value="${esc(h?h.label:S.city!=='Другой город'?S.city:'')}">
     <button class="rb tap" data-act="geoLocate" aria-label="Определить по геопозиции" title="Определить по геопозиции">${I.pin}</button>
     <div class="sug" id="addrSug" role="listbox"></div></div>
-  ${h?`<button class="pill tap" data-act="clearHome" style="margin-bottom:10px">Убрать адрес</button>
+  ${h?.scope==='city'?`<p class="foot" style="margin:6px 0 14px">Выбрано: ${esc(h.town)}. Показываем сети по всему городу. Добавьте улицу или дом в это же поле, чтобы найти магазины рядом.</p>`:h?`<button class="pill tap" data-act="clearHome" style="margin-bottom:10px">Искать по всему городу</button>
   <div class="map" id="map" aria-label="Карта: дом и магазины рядом"></div>
   <div class="nearl">${GBUSY?'<div class="cap">Ищем магазины рядом…</div>':list.length?`<div class="list">${list.map(id=>`<div class="row">${smark(id)}<span class="rl">${SN(id)}<div>${esc(near[id].addr||'адрес не указан на карте')}</div></span><span class="rv">${fmtD(near[id].d)}</span></div>`).join('')}</div>`
     :S.near==null?'<div class="cap">Поиск магазинов не завершён. Пока используем список сетей города.</div><button class="pill tap" data-act="retryNear">Повторить поиск</button>'
     :`<div class="cap">В радиусе ${fmtD(NEAR_R)} магазинов этих сетей не нашли. Оставим все сети вашего города.</div>`}</div>`
-  :`<p class="foot" style="margin:6px 0 14px">Найдём ближайшие магазины и будем считать корзину только по ним. Квартира не нужна, адрес хранится только на этом телефоне.</p>`}`;
+  :`<p class="foot" style="margin:6px 0 14px">Введите город — покажем сети в нём. Добавьте улицу или дом — найдём магазины рядом. Выберите подходящую подсказку; квартира не нужна.</p>`}`;
 }
 
 /* подключить обработчики после отрисовки */
 function geoBind(){
   const inp=$('#addrIn'),sug=$('#addrSug');
   if(inp){
-    inp.oninput=()=>{clearTimeout(GTIMER);sug.innerHTML='';const q=inp.value.trim();if(q.length<3)return;
+    inp.oninput=()=>{clearTimeout(GTIMER);sug.innerHTML='';const q=inp.value.trim();if(q.length<2)return;
+      showPlaces(localCities(q),q,'Ищем город или адрес…');
       GTIMER=setTimeout(()=>suggest(q),350)};
-    inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const f=sug.querySelector('button');if(f)f.click()}};
+    inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const f=sug.querySelector('button');if(f)f.click();else {clearTimeout(GTIMER);suggest(inp.value.trim())}}else if(e.key==='Escape'){clearTimeout(GTIMER);sug.innerHTML=''}};
   }
   /* карту пересоздаём, только если поменялись дом или магазины; в свёрнутом разделе — при раскрытии */
   const m=$('#map');
@@ -97,30 +110,36 @@ function geoBind(){
     const d=m.closest('details');if(d&&!d._mapHook){d._mapHook=1;d.addEventListener('opened',()=>geoBind())}}
 }
 async function suggest(q){
-  const sug=$('#addrSug');if(!sug)return;
+  if(q.length<2)return;
+  const local=localCities(q),sug=$('#addrSug');if(!sug)return;
   if(YA())try{
-    const items=await yaSuggest(q);if(sug!==$('#addrSug')||$('#addrIn')?.value.trim()!==q)return;
-    sug.innerHTML=items.length?items.map((it,i)=>`<button type="button" class="tap" data-i="${i}"><b>${esc(it.title)}</b><span>${esc(it.sub)}</span></button>`).join('')
-      :'<div class="none">Не нашли. Попробуйте «Город, улица, дом».</div>';
-    sug.querySelectorAll('button').forEach(b=>b.onclick=async()=>{sug.innerHTML='';
-      try{const[la,lo,p]=await items[+b.dataset.i].pick();setHome(la,lo,p)}catch(e){toast('Не удалось найти этот адрес на карте','shopping_cart')}});
-    return;
-  }catch(e){/* Яндекс недоступен — ниже бесплатный поиск */}
-  const bias=S.home?`&lat=${S.home.lat}&lon=${S.home.lon}`:'&lat=55.75&lon=37.62';
+    const items=await yaSuggest(q);
+    showPlaces([...local,...items.filter(it=>!local.some(c=>geoNorm(c.title)===geoNorm(it.title)))],q,undefined,sug);return;
+  }catch(e){/* try the free geocoder */}
+  const h=S.home,bias=h&&Number.isFinite(h.lat)&&Number.isFinite(h.lon)?`&lat=${h.lat}&lon=${h.lon}`:'';
   try{
-    const r=await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=12${bias}&lang=default&layer=house&layer=street`);
-    const j=await r.json(),seen=new Set();
-    /* один дом в OSM бывает несколькими объектами (здание, адрес, организация) — оставляем по одному */
-    const fs=(j.features||[]).filter(f=>{const p=f.properties;if(p.countrycode!=='RU')return false;
-      const k=[p.street||p.name,p.housenumber,p.city||p.town||p.village].join('|');if(seen.has(k))return false;seen.add(k);return true});
-    if(sug!==$('#addrSug')||$('#addrIn')?.value.trim()!==q)return;
-    sug.innerHTML=fs.length?fs.map((f,i)=>`<button type="button" class="tap" data-i="${i}"><b>${esc([f.properties.street||f.properties.name,f.properties.housenumber].filter(Boolean).join(', '))}</b><span>${esc([f.properties.city||f.properties.town||f.properties.village,f.properties.state].filter((x,k,a)=>x&&a.indexOf(x)===k).join(', '))}</span></button>`).join('')
-      :'<div class="none">Не нашли. Попробуйте «Город, улица, дом».</div>';
-    sug.querySelectorAll('button').forEach(b=>b.onclick=()=>{const f=fs[+b.dataset.i];sug.innerHTML='';
-      setHome(f.geometry.coordinates[1],f.geometry.coordinates[0],f.properties)});
-  }catch(e){sug.innerHTML='<div class="none">Нет связи с поиском адресов. Проверьте интернет.</div>'}
+    const r=await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=12${bias}&lang=default&layer=city&layer=locality&layer=house&layer=street`);
+    if(!r.ok)throw new Error('search');
+    const j=await r.json(),seen=new Set(local.map(c=>geoNorm(c.title)));
+    const items=local.slice();
+    (j.features||[]).forEach(f=>{const p=f.properties||{};if(String(p.countrycode).toUpperCase()!=='RU'||!f.geometry?.coordinates)return;
+      const city=cityPlace(p),title=city?(p.name||p.city||p.town||p.village):[p.street||p.name,p.housenumber].filter(Boolean).join(', ');
+      const sub=city?'Город · магазины по всему городу':[p.city||p.town||p.village,p.state].filter((x,k,a)=>x&&a.indexOf(x)===k).join(', ');
+      const key=city?geoNorm(title):geoNorm(title+'|'+sub);if(!title||seen.has(key))return;seen.add(key);
+      items.push({title,sub,pick:async()=>[f.geometry.coordinates[1],f.geometry.coordinates[0],city?{...p,city:p.city||p.town||p.village||p.name,scope:'city'}:p]});
+    });
+    showPlaces(items,q,undefined,sug);
+  }catch(e){showPlaces(local,q,'Нет связи с поиском. Проверьте интернет и попробуйте снова.',sug)}
 }
 async function setHome(lat,lon,props){
+  if(cityPlace(props)){
+    const town=props.city||props.town||props.village||props.name;
+    if(!town)return;
+    ++GNEAR;GBUSY=false;
+    S.home={scope:'city',lat:Number.isFinite(lat)?lat:null,lon:Number.isFinite(lon)?lon:null,label:town,town,city:cityOf({...props,city:town}),region:props.region||props.state||''};
+    S.city=S.home.city;S.near=null;markDirty();rerenderBody();return;
+  }
+  if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
   S.home={lat:+lat.toFixed(5),lon:+lon.toFixed(5),label:addrLabel(props),city:cityOf(props),
     town:props.city||props.town||props.village||'',region:props.region||props.state||''};
   S.city=S.home.city;S.near=null;GBUSY=true;markDirty();rerenderBody();
@@ -148,7 +167,7 @@ async function storesAround(h){
   }finally{clearTimeout(t)}
 }
 async function findNear(){
-  const home=S.home;if(!home)return;
+  const home=S.home;if(!home||home.scope==='city')return;
   const h={...home},request=++GNEAR;GBUSY=true;
   const current=()=>request===GNEAR&&S.home===home&&home.lat===h.lat&&home.lon===h.lon;
   try{
