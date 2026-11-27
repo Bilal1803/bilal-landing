@@ -143,8 +143,20 @@ function unitMin(pid){
 }
 const rCost=r=>Object.entries(r.ing).reduce((a,[id,g])=>a+(unitMin(id)??0)*g,0);
 /* продукты, которые нельзя: по предпочтениям («Без свинины»…) и «не люблю» */
+// Generic exclusions cover every variant; old specific exclusions stay specific.
+const FOOD_GROUPS={pelmeni:['pelmeni','pelmeni_kur'],sosiski:['sosiski','sosiski_kur'],farsh:['farsh','farsh_gov','farsh_kur']};
+const FOOD_NAMES={pelmeni:'Пельмени · любые',sosiski:'Сосиски · любые',farsh:'Фарш · любой'};
+const dislikedProduct=id=>S.dislikes.some(x=>x===id||(FOOD_GROUPS[x]||[]).includes(id));
+const dietProduct=id=>PREFS.some(p=>S.prefs[p.id]&&ptags(id).some(t=>p.ex.includes(t)));
+function toggleFood(id){
+ const ids=FOOD_GROUPS[id]||[id];
+ if(S.dislikes.includes(id))S.dislikes=S.dislikes.filter(x=>!ids.includes(x));
+ else {S.dislikes=S.dislikes.filter(x=>!ids.includes(x));S.dislikes.push(id)}
+ markDirty();resub();rerenderBody();
+}
+function uniqueDishes(list){const seen=new Set();return list.filter(r=>{const k=r.n.toLocaleLowerCase('ru').replace(/ё/g,'е').trim();if(seen.has(k))return false;seen.add(k);return true})}
 function badProd(id){const ex=new Set();PREFS.forEach(p=>{if(S.prefs[p.id])p.ex.forEach(t=>ex.add(t))});
-  return ptags(id).some(t=>ex.has(t))||S.dislikes.includes(id)}
+  return ptags(id).some(t=>ex.has(t))||dislikedProduct(id)}
 /* «База на кухне» (соль, масло, сахар): считаем, что есть дома, пока человек не отметит «закончилось» */
 const isBase=id=>BASE.includes(id)&&!(S.baseOut||[]).includes(id);
 const canGet=id=>isBase(id)||unitMin(id)!=null||(S.pantry[id]||0)>0;
@@ -189,7 +201,7 @@ const EAT={
 function eatCat(r,m){const L=EAT[m];if(!L)return null;const c=L.find(c=>c[4].test(r.n0||r.n));return c?c[0]:null}
 const eatOk=(r,m)=>{const c=eatCat(r,m);return !c||!(S.eatOff||[]).includes(m+':'+c)};
 function mealPool(allowed,m){return allowed.filter(r=>r.m.includes(m)&&eatOk(r,m))}
-const allowedRecipes=()=>RECIPES.filter(r=>!excluded(r));
+const allowedRecipes=()=>uniqueDishes(RECIPES.filter(r=>!excluded(r)));
 const mealsList=()=>S.snack?['b','l','d','s']:['b','l','d'];
 const mealShare=()=>S.snack?{b:.25,l:.35,d:.3,s:.1}:{b:.28,l:.39,d:.33};
 function rng(seed){let s=(seed*2654435761)>>>0||1;return()=>{s^=s<<13;s>>>=0;s^=s>>>17;s^=s<<5;s>>>=0;return(s%100000)/100000}}
@@ -223,7 +235,7 @@ const ADDWHEN={tvorog:'на перекус или завтрак',kefir:'на п
 function addonOK(pid){const ex=new Set();PREFS.forEach(p=>{if(S.prefs[p.id])p.ex.forEach(t=>ex.add(t))});
   const k=kit();
   if((pid==='yaytsa'&&!k.stove&&!k.mc)||(pid==='kurica_file'&&!k.oven&&!k.mc))return false;
-  return !ex.has(ADDTAG[pid])&&!S.dislikes.includes(pid)&&(unitMin(pid)!=null||(S.pantry[pid]||0)>0)}
+  return !ex.has(ADDTAG[pid])&&!dislikedProduct(pid)&&(unitMin(pid)!=null||(S.pantry[pid]||0)>0)}
 function personalize(day,d,targets){
   day.extra=[];
   S.family.forEach((m,j)=>{
@@ -916,7 +928,7 @@ const stem=w=>w.slice(0,Math.min(5,Math.max(3,w.length-2)));
 /* к названию блюда добавляем общие слова, которыми его могут назвать */
 const rText=r=>{const n=norm(r.n);return n+(/каш|овсян/.test(n)?' каша':'')+(/суп|борщ|щи|уха|рассольн/.test(n)?' суп':'')+(/салат/.test(n)?' салат':'')
   +(/котлет|фрикадел|фарш|гуляш|свинин|говяд|флотск/.test(n)?' мясо':'')+(/минтай|хек|тунец|тунц|уха/.test(n)?' рыба':'')};
-const rIng=r=>Object.keys(r.ing0||r.ing).map(id=>norm(PROD[id].n)).join(' ');
+const rIng=r=>Object.keys(r.ing).map(id=>norm(PROD[id].n)).join(' ');
 function wishFind(q){
   const ws=norm(q).split(/\s+/).filter(w=>w.length>1&&!STOP.has(w)).map(stem);
   if(!ws.length)return{rs:[],ps:[]};
@@ -925,11 +937,12 @@ function wishFind(q){
   /* сначала по названию блюда; если так не нашлось — по составу («всё с печенью») */
   let rs=RECIPES.filter(r=>{const t=rText(r);return ws.every(w=>has(t,w))});
   if(!rs.length)rs=RECIPES.filter(r=>{const t=rText(r)+' '+rIng(r);return ws.every(w=>has(t,w))});
-  const ps=Object.values(PROD).filter(p=>ws.every(w=>has(norm(p.n),w)));
+  rs=uniqueDishes(rs.filter(r=>!r.blocked&&!Object.keys(r.ing).some(badProd)));
+  const ps=preferenceProducts().filter(p=>ws.every(w=>has(norm(p.n),w)));
   return{rs,ps};
 }
 function wishRes(){
-  if(norm(WQ).trim().length<3)return '';
+  if(norm(WQ).trim().length<2)return '';
   const{rs,ps}=wishFind(WQ);
   if(!rs.length&&!ps.length)return `<div class="cap" style="padding:8px 4px">Не нашли такого блюда. Попробуйте одним словом: «каша», «салат», «печень».</div>`;
   const nd=S.nodish||[];const allOff=rs.length&&rs.every(r=>nd.includes(r.id));
@@ -937,18 +950,33 @@ function wishRes(){
     ${rs.map(r=>`<label class="row">${dish(r.id,'dp sm')}<span class="rl">${esc(r.n)}<div>${nd.includes(r.id)?'не предлагаем':MEAL[r.m[0]]||''}</div></span><input type="checkbox" class="sw no" data-act="nodish" data-v="${r.id}" ${nd.includes(r.id)?'checked':''}></label>`).join('')}
     ${ps.map(p=>`<label class="row"><span class="ri">${I.fork}</span><span class="rl">${p.n}<div>уберём из всех блюд</div></span><input type="checkbox" class="sw no" data-act="dislikeSw" data-v="${p.id}" ${S.dislikes.includes(p.id)?'checked':''}></label>`).join('')}</div>`;
 }
+function preferenceProducts(){
+  const children=Object.values(FOOD_GROUPS).flat().filter(id=>!FOOD_GROUPS[id]);
+  return Object.values(PROD).filter(p=>!['sol','sahar'].includes(p.id)&&(!children.includes(p.id)||S.dislikes.includes(p.id)))
+    .filter(p=>S.dislikes.includes(p.id)||(FOOD_GROUPS[p.id]||[p.id]).some(id=>!dietProduct(id)))
+    .map(p=>({...p,n:FOOD_NAMES[p.id]||p.n}))
+    .sort((a,b)=>Number(S.dislikes.includes(b.id))-Number(S.dislikes.includes(a.id))||a.n.localeCompare(b.n,'ru'));
+}
+let FQ='';
+function favoriteChoices(){
+ const list=uniqueDishes(RECIPES.filter(r=>!excluded(r))).filter(r=>norm(r.n).includes(norm(FQ)));
+ return list.length?list.sort((a,b)=>Number(S.likes.includes(b.id))-Number(S.likes.includes(a.id))).map(r=>`<button class="pill tap ${S.likes.includes(r.id)?'on':''}" data-act="like" data-v="${r.id}" aria-pressed="${S.likes.includes(r.id)}"><img src="img2/dish/${r.id}.jpg" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;margin-left:-10px">${esc(r.n)}</button>`).join(''):'<p class="foot">Подходящих блюд не найдено. Измените поиск или ограничения.</p>';
+}
 function pPrefs(){
-  const prods=Object.values(PROD).filter(p=>!['sol','sahar'].includes(p.id));
+  const prods=preferenceProducts();
   const nd=(S.nodish||[]).filter(id=>RID[id]);
-  return `<span class="lbl">Пожелания</span>
+  return `  <span class="lbl">Ограничения</span><div class="pills wrapc" style="margin-bottom:18px">${PREFS.map(p=>`<button class="pill tap ${S.prefs[p.id]?'on':''}" data-act="pref" data-v="${p.id}">${p.n}</button>`).join('')}</div>
+  ${S.prefs.halal?`<span class="lbl">Халяль</span><div class="ctl" style="margin-bottom:8px">${seg('halalMode',halalMark()?'mark':'pork',[['mark','С маркировкой «Халяль»'],['pork','Просто без свинины']])}</div>`:''}
+  ${PREFS.filter(p=>S.prefs[p.id]&&p.note).map(p=>`<p class="foot" style="margin:${p.id==='halal'?'0':'-8px'} 4px 14px"><b>${p.n}.</b> ${p.id==='halal'?(halalMark()?'Свинину убрали. Мясо и курицу в списке покупок помечаем «халяль» и ищем в доставке с этим словом. Такое мясо бывает дороже, поэтому сумма примерная.':'Только убираем свинину, а мясо и курица обычные.'):p.note}</p>`).join('')}
+<span class="lbl">Не люблю блюда</span>
   <div class="wish"><input class="field" id="wishIn" type="text" autocomplete="off" enterkeyhint="search" placeholder="Что не любите? Например: каши на воде" value="${esc(WQ)}">
   <div id="wishRes">${wishRes()}</div></div>
   ${nd.length?`<span class="lbl">Не предлагаем</span><div class="pills wrapc" style="margin-bottom:18px">${nd.map(id=>`<button class="pill tap" data-act="nodishDel" data-v="${id}" title="Снова предлагать">${esc(RID[id].n)} <span style="color:var(--ink3)">✕</span></button>`).join('')}</div>`:''}
-  <span class="lbl">Ограничения</span><div class="pills wrapc" style="margin-bottom:18px">${PREFS.map(p=>`<button class="pill tap ${S.prefs[p.id]?'on':''}" data-act="pref" data-v="${p.id}">${p.n}</button>`).join('')}</div>
-  ${S.prefs.halal?`<span class="lbl">Халяль</span><div class="ctl" style="margin-bottom:8px">${seg('halalMode',halalMark()?'mark':'pork',[['mark','С маркировкой «Халяль»'],['pork','Просто без свинины']])}</div>`:''}
-  ${PREFS.filter(p=>S.prefs[p.id]&&p.note).map(p=>`<p class="foot" style="margin:${p.id==='halal'?'0':'-8px'} 4px 14px"><b>${p.n}.</b> ${p.id==='halal'?(halalMark()?'Свинину убрали. Мясо и курицу в списке покупок помечаем «халяль» и ищем в доставке с этим словом. Такое мясо бывает дороже, поэтому сумма примерная.':'Только убираем свинину, а мясо и курица обычные.'):p.note}</p>`).join('')}
-  <span class="lbl">Не ем</span><div class="pills wrapc" style="margin-bottom:18px" data-clamp="10" data-ck="dislikes">${prods.map(p=>`<button class="pill no tap ${S.dislikes.includes(p.id)?'on':''}" data-act="dislike" data-v="${p.id}">${p.n}</button>`).join('')}</div>
-  <span class="lbl">Любимые блюда, будут чаще</span><div class="pills wrapc" data-clamp="8" data-ck="likes">${RECIPES.map(r=>`<button class="pill tap ${S.likes.includes(r.id)?'on':''}" data-act="like" data-v="${r.id}"><img src="img2/dish/${r.id}.jpg" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;margin-left:-10px">${r.n}</button>`).join('')}</div>`;
+  <span class="lbl">Не ем продукты</span><p class="foot">Исключаем из всех блюд. Пельмени, сосиски и фарш — сразу всех видов. Продукты, запрещённые ограничениями выше, здесь скрыты.</p><div class="pills wrapc" style="margin-bottom:18px" data-clamp="10" data-ck="dislikes">${prods.map(p=>`<button class="pill no tap ${S.dislikes.includes(p.id)?'on':''}" data-act="dislike" data-v="${p.id}">${p.n}</button>`).join('')}</div>
+  <span class="lbl">Любимые блюда, будут чаще</span>
+  <p class="foot">Здесь только подходящие блюда. Ограничения важнее избранного; временно неподходящие любимые блюда сохранятся и вернутся после снятия ограничения.</p>
+  <input class="field" id="favoriteIn" type="search" aria-label="Поиск любимых блюд" placeholder="Найти любимое блюдо" value="${esc(FQ)}">
+  <div id="favoriteChoices" class="pills wrapc" data-clamp="8" data-ck="likes">${favoriteChoices()}</div>`;
 }
 const MEALN={b:'Завтрак',l:'Обед',d:'Ужин'};
 function pEat(){
@@ -956,10 +984,11 @@ function pEat(){
   /* сколько блюд в каждом виде: один проход по рецептам вместо прохода на каждую плитку */
   Object.keys(EAT).forEach(m=>al.forEach(r=>{if(r.m.includes(m)){const k=m+':'+eatCat(r,m);CNT[k]=(CNT[k]||0)+1}}));
   return Object.entries(EAT).map(([m,L])=>{
-    const on=L.filter(c=>!off.includes(m+':'+c[0])).length;
-    return `<span class="lbl">${MEALN[m]}<em>${on} из ${L.length}</em></span>
+    const on=L.filter(c=>CNT[m+':'+c[0]]&&!off.includes(m+':'+c[0])).length;
+    return `<span class="lbl">${MEALN[m]}<em>${on} выбрано · ${L.filter(c=>CNT[m+':'+c[0]]).length} доступно</em></span>
     <div class="eat">${L.map(([id,n,d,rid])=>{const k=m+':'+id,cnt=CNT[k]||0;
-      return `<button class="ecard tap ${off.includes(k)?'':'on'}" data-act="eat" data-v="${k}" aria-pressed="${!off.includes(k)}">${dish(rid,'eph')}<i class="chk">${I.check}</i><b>${n}</b><span>${d?d+' · ':''}${cnt} ${plural(cnt,'блюдо','блюда','блюд')}</span></button>`}).join('')}</div>`}).join('')
+      const sample=al.find(r=>r.m.includes(m)&&eatCat(r,m)===id);
+      return `<button ${cnt?'':'disabled'} class="ecard tap ${cnt&&!off.includes(k)?'on':''}" data-act="eat" data-v="${k}" aria-pressed="${!!cnt&&!off.includes(k)}">${sample?dish(sample.id,'eph'):'<div class="eph" style="opacity:.25">'+I.fork+'</div>'}<i class="chk">${I.check}</i><b>${n}</b><span>${cnt?cnt+' '+plural(cnt,'блюдо','блюда','блюд'):'Не подходит под настройки'}</span></button>`}).join('')}</div>${on?'':'<p class="foot">Для этого приёма пищи ничего не выбрано. Включите подходящий вариант или измените ограничения.</p>'}`}).join('')
   +`<p class="foot">Отметки можно поменять потом в профиле, меню пересоберётся само.</p>`;
 }
 function pKitchen(){
@@ -1169,19 +1198,19 @@ function vOnb(){
 const WSTEPS=[
   {t:'Кто в семье?',s:'Посчитаем норму калорий и БЖУ для каждого.',img:'smiling_face',ui:'family',b:pFamily},
   {t:'Какой бюджет?',s:'Сумма на продукты и срок, на который покупаем.',img:'money_bag',ui:'money',b:pBudget},
+  {t:'Что вы любите?',s:'Исключим лишнее и чаще будем ставить любимое.',img:'red_heart',ui:'heart',b:pPrefs},
   {t:'Где покупаете?',s:'Сравним цены в магазинах вашего города.',img:'shopping_cart',ui:'cart',b:pStores},
   {t:'Что вы едите?',s:'Отметьте, что у вас обычно бывает на завтрак, обед и ужин. Остальное в меню ставить не будем.',img:'fork_and_knife_with_plate',ui:'plate',b:pEat},
-  {t:'Что вы любите?',s:'Исключим лишнее и чаще будем ставить любимое.',img:'red_heart',ui:'heart',b:pPrefs},
   {t:'Что есть на кухне?',s:'Отметьте технику, и мы предложим только то, что получится приготовить. И что уже лежит дома, чтобы не покупать.',img:'house',ui:'house',b:pPantry}
 ];
-/* Готовое меню сразу после «Кто в семье» и «Бюджет»: остальные шаги — по желанию */
+/* Первое меню только после проверки ограничений и вкусов. */
 function vPreview(){
   const rec=shop().recommended,tot=effTotal(rec),d=S.plan.days[0],nd=S.plan.days.length,left=S.budget-tot;
   const meals=d.meals.filter(x=>x.rid&&x.who==null).slice(0,4);
   return `<div class="wiz"><div class="in">
-    <div class="wbar"><button class="rb tap" data-act="wizBack" aria-label="Назад">${I.back}</button><div class="wprog">${WSTEPS.map((_,i)=>`<i class="${i<=1?'on':''}"></i>`).join('')}</div><span class="badge lime">Меню готово</span></div>
+    <div class="wbar"><button class="rb tap" data-act="wizBack" aria-label="Назад">${I.back}</button><div class="wprog">${WSTEPS.map((_,i)=>`<i class="${i<=2?'on':''}"></i>`).join('')}</div><span class="badge lime">Меню готово</span></div>
     <div class="whead"><h1 class="lt">Меню уже собрано</h1><img class="wico" src="img2/ui/plate.webp" alt=""></div>
-    <p class="sub">Под вашу семью и бюджет на ${nd} ${plural(nd,'день','дня','дней')}. Магазины, вкусы и технику можно уточнить сейчас или потом в профиле.</p>
+    <p class="sub">Под вашу семью и бюджет на ${nd} ${plural(nd,'день','дня','дней')}. Ограничения и вкусы уже учтены. Магазины и технику можно уточнить сейчас или потом в профиле.</p>
     <div class="hero dark pv"><div class="k">Корзина на ${nd} ${plural(nd,'день','дня','дней')}</div>
       <div class="big"><span class="cn" data-ck="sumW" data-n="${tot}">${rubN(tot)}</span><small>₽</small></div>
       <div class="sub" style="color:rgba(255,255,255,.7)">${left>=0?`из ${rub(S.budget)} · останется <b style="color:var(--lime)">${rub(left)}</b>`:`<b>Не хватает ${rub(-left)}</b>`}</div></div>
@@ -1189,7 +1218,7 @@ function vPreview(){
     ${meals.map(x=>{const r=plannedRecipe(S.plan,x.rid);return `<div class="meal">${dish(r.id,'dp')}<div class="mt"><span class="badge">${MEAL[x.meal]}</span><div class="mn">${esc(r.n)}</div><div class="mm"><b>${Math.round(r.kcal)}</b> ккал · ≈ ${rubR(rCost(r))}</div></div></div>`}).join('')}
     </div>
     <div class="wfoot"><button class="btn go tap" data-act="wizDone">Открыть меню<span class="arr">${I.arrows}</span></button>
-      <button class="wskip tap" data-act="wizMore">Уточнить магазины, вкусы и кухню</button></div></div>`;
+      <button class="wskip tap" data-act="wizMore">Уточнить магазины и кухню</button></div></div>`;
 }
 function vWiz(){
   if(WPV)return vPreview();
@@ -1198,7 +1227,7 @@ function vWiz(){
     <div class="wbar"><button class="rb tap" data-act="wizBack" aria-label="Назад">${I.back}</button><div class="wprog">${WSTEPS.map((_,i)=>`<i class="${i<=WIZ?'on':''}"></i>`).join('')}</div><span class="badge">${WIZ+1} из ${WSTEPS.length}</span></div>
     <div class="whead"><h1 class="lt">${st.t}</h1>${st.ui?`<img class="wico" src="img2/ui/${st.ui}.webp" alt="">`:''}</div><p class="sub">${st.s}</p>
     <div id="wbody">${st.b()}</div></div>
-    <div class="wfoot"><button class="btn go tap" data-act="wizNext">${last?'Собрать корзину':'Дальше'}<span class="arr">${I.arrows}</span></button>${WIZ>=2&&!last?'<button class="wskip tap" data-act="wizDone">Пропустить и настроить позже</button>':''}</div></div>`;
+    <div class="wfoot"><button class="btn go tap" data-act="wizNext">${last?'Собрать корзину':'Дальше'}<span class="arr">${I.arrows}</span></button>${WIZ>=3&&!last?'<button class="wskip tap" data-act="wizDone">Пропустить и настроить позже</button>':''}</div></div>`;
 }
 function bindSlide(){
   const sl=$('#slide'),kn=$('#knob');if(!sl)return;
@@ -1238,7 +1267,7 @@ function rerenderBody(){ // перерисовать текущий экран/�
   else if(WIZ!=null){const w=$('.wiz'),y=w?w.scrollTop:0;morph($('#wbody'),WSTEPS[WIZ].b());bindInputs();afterRender($('#wbody'));if(w)w.scrollTop=y}
   else render(true);
 }
-function markDirty(){S.dirty=!!S.plan;SH=null;save()}
+function markDirty(){S.likes=S.likes.filter(id=>!(S.nodish||[]).includes(id));S.dirty=!!S.plan;SH=null;save()}
 function autoRegen(){if(generate(false))toast(movedNote()||'Меню пересобрано под новые настройки',movedNote()?'house':'sparkles')}
 const movedNote=()=>MOVED?.length?'В «Что есть дома» перенесли: '+MOVED.slice(0,3).join(', ')+(MOVED.length>3?` и ещё ${MOVED.length-3}`:''):'';
 
@@ -1260,6 +1289,7 @@ function bindInputs(){
   if(bi)bi.oninput=()=>{const d=bi.value.replace(/\D/g,'').slice(0,7);setB(d,'in');bi.value=d?bfmt(+d):''};
   if(br)br.oninput=()=>setB(br.value,'range');
   const cs=$('#citySel');if(cs)cs.onchange=()=>{S.city=cs.value;markDirty();rerenderBody()};
+  const fi=$('#favoriteIn');if(fi)fi.oninput=()=>{FQ=fi.value;$('#favoriteChoices').innerHTML=favoriteChoices()};
   const wi=$('#wishIn');if(wi)wi.oninput=()=>{WQ=wi.value;$('#wishRes').innerHTML=wishRes()};
   const pp=$('#panP');if(pp)pp.onchange=()=>{$('#panU').textContent=pp.value==='yaytsa'?'Сколько, шт':LIQ.has(pp.value)?'Сколько, мл':'Сколько, г'};
 }
@@ -1289,7 +1319,9 @@ const A={
     <div class="list" data-noclamp>${RSORT.map(([v,n,d])=>`<button class="row tap" data-act="rsortSet" data-v="${v}"><span class="rl">${n}<div>${d}</div></span>${S.rs===v?`<span class="sok">${I.check}</span>`:''}</button>`).join('')}</div>`),
   rsortSet:a=>{S.rs=a.dataset.v;save();closeSheet();render(true)},
   recipe:(a,e)=>{if(e.target.closest('[data-act=like]'))return;RMEM=null;sheetRecipe(a.dataset.v,a.dataset.di,a.dataset.mi)},
-  like:a=>{S.likes=toggleIn(S.likes,a.dataset.v);save();
+  like:a=>{const id=a.dataset.v;
+    if(!S.likes.includes(id)&&excluded(RID[id])){toast('Это блюдо не подходит под ваши настройки. Сначала измените ограничения.');return}
+    S.likes=toggleIn(S.likes,id);markDirty();
     if($('.sheet')&&a.dataset.keep){const s=SLOT;sheetRecipe(a.dataset.v,s?.di,s?.mi)}
     if(WIZ!=null)rerenderBody();else render(true)},
   swap:()=>{if(!SLOT)return;
@@ -1374,11 +1406,11 @@ const A={
   prep:a=>{S.prep=+a.dataset.v;markDirty();rerenderBody()},
   prepB:a=>{S.prepB=a.checked;markDirty();rerenderBody()},
   kit:a=>{const k=kit();k[a.dataset.v]=!k[a.dataset.v];S.kit=k;markDirty();rerenderBody()},
-  pref:a=>{S.prefs[a.dataset.v]=!S.prefs[a.dataset.v];markDirty();a.classList.toggle('on')},
-  dislike:a=>{S.dislikes=toggleIn(S.dislikes,a.dataset.v);markDirty();a.classList.toggle('on')},
-  dislikeSw:a=>{S.dislikes=toggleIn(S.dislikes,a.dataset.v);markDirty();rerenderBody()},
+  pref:a=>{S.prefs[a.dataset.v]=!S.prefs[a.dataset.v];markDirty();resub();rerenderBody()},
+  dislike:a=>toggleFood(a.dataset.v),
+  dislikeSw:a=>toggleFood(a.dataset.v),
   eat:a=>{const k=a.dataset.v,m=k.split(':')[0],off=S.eatOff||[];
-    if(!off.includes(k)&&EAT[m].filter(c=>!off.includes(m+':'+c[0])).length<=1){toast('Хотя бы что-то одно на '+MEALN[m].toLowerCase()+' оставьте');return}
+    if(!off.includes(k)&&new Set(allowedRecipes().filter(r=>r.m.includes(m)&&!off.includes(m+':'+eatCat(r,m))).map(r=>eatCat(r,m))).size<=1){toast('Хотя бы что-то одно на '+MEALN[m].toLowerCase()+' оставьте');return}
     S.eatOff=toggleIn(off,k);markDirty();rerenderBody()},
   baseOut:a=>{const id=a.dataset.v;S.baseOut=toggleIn(S.baseOut||[],id);
     /* из корзины: продукт сразу в покупках, меню не пересобираем — меняется только список */
@@ -1417,13 +1449,13 @@ const A={
   wizNext:()=>{
     if(WIZ===0&&!S.family.length){toast('Добавьте хотя бы одного человека','smiling_face');return}
     if(WIZ===0)S.family.forEach((m,i)=>{if(!m.name.trim())m.name=i?'Человек '+(i+1):'Я'});
-    if(WIZ===1){if(generate(false))transition(()=>{WPV=true;render();$('.wiz').scrollTop=0},'fwd');return}
-    if(WIZ===2&&!activeStores().length){toast('Включите хотя бы один магазин','shopping_cart');return}
+    if(WIZ===2){if(generate(false))transition(()=>{WPV=true;render();$('.wiz').scrollTop=0},'fwd');return}
+    if(WIZ===3&&!activeStores().length){toast('Включите хотя бы один магазин','shopping_cart');return}
     if(WIZ<WSTEPS.length-1){transition(()=>{WIZ++;render();$('.wiz').scrollTop=0},'fwd');return}
     if(generate(false)){transition(()=>{WIZ=null;S.onb=true;S.tab='home';save();render();scrollTo(0,0)},'fade');toast('Готово! Меню и корзина собраны','sparkles')}},
-  wizMore:()=>transition(()=>{WPV=false;WIZ=2;render();$('.wiz').scrollTop=0},'fwd'),
+  wizMore:()=>transition(()=>{WPV=false;WIZ=3;render();$('.wiz').scrollTop=0},'fwd'),
   /* закончить мастер сейчас: меню пересобираем, только если на шагах что-то поменяли */
-  wizDone:()=>{if(WIZ===2&&!WPV&&!activeStores().length){toast('Включите хотя бы один магазин','shopping_cart');return}
+  wizDone:()=>{if(WIZ===3&&!WPV&&!activeStores().length){toast('Включите хотя бы один магазин','shopping_cart');return}
     if((!S.plan||S.dirty)&&!generate(false))return;
     transition(()=>{WIZ=null;WPV=false;S.onb=true;S.tab='home';save();render();scrollTo(0,0)},'fade');toast('Готово! Меню и корзина собраны','sparkles')},
   reset:()=>{if(confirm('Удалить все данные приложения и начать заново?')){localStorage.removeItem(KEY);location.reload()}}
