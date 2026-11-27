@@ -1,6 +1,6 @@
 'use strict';
 /* =====================================================================
-   Корзинка — продукты по бюджету, меню и КБЖУ
+   tabi — продукты по бюджету, меню и КБЖУ
    data.js: магазины, продукты, цены, рецепты, картинки
    app.js : расчёты + интерфейс
    ===================================================================== */
@@ -429,7 +429,7 @@ const pname=id=>PROD[id].n+(isHalalItem(id)?' · халяль':'');
 const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 let INSTALL=null; // событие установки (Android, Chrome) — показываем системное окно по кнопке
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();INSTALL=e});
-addEventListener('appinstalled',()=>{INSTALL=null;toast('Корзинка на экране телефона','sparkles')});
+addEventListener('appinstalled',()=>{INSTALL=null;toast('tabi на экране телефона','sparkles')});
 if('serviceWorker' in navigator&&location.protocol!=='file:')addEventListener('load',()=>{
   navigator.serviceWorker.register('sw.js').catch(()=>{});
   /* картинки блюд текущего меню заранее сохраняем — без интернета меню будет с фото */
@@ -1095,7 +1095,7 @@ function readPrices(src){
   }
   return result;
 }
-/* цены из расширения «Корзинка — сборщик цен» (папка extension): оно присылает их через postMessage */
+/* цены из расширения «tabi — сборщик цен» (папка extension): оно присылает их через postMessage */
 function extPrices(d){
   const prices=readPrices(d.prices);
   const sig=JSON.stringify([prices,d.images||{},d.names||{},d.dates||{}]);
@@ -1132,7 +1132,7 @@ function sheetPrices(){
    <div class="note" style="margin-bottom:12px">Серые числа это встроенные примерные цены или цены из обновления${S.city!=='Москва'?` с поправкой на город (×${k})`:''}${FEED?' или цены из prices.json'+(FEED.updated?` от ${esc(FEED.updated)}`:''):''}. Впишите цену с ценника или из приложения магазина, расчёт сразу обновится. «-» значит, что товара нет в магазине. Пустое поле вернёт встроенную цену.</div>
    <span class="lbl">Откуда цены</span><div class="pills wrapc" style="margin-bottom:16px">${srcLine()}</div>
    <button class="btn lime tap" style="margin-bottom:10px" data-act="pasteOpen">Вставить цены из закладки</button>
-   <div id="pasteBox" style="display:none;margin-bottom:12px"><textarea id="pasteTxt" class="field" rows="4" placeholder="Вставьте сюда текст, скопированный закладкой «Корзинка: собрать цены»" style="resize:vertical;font-size:13px"></textarea>
+   <div id="pasteBox" style="display:none;margin-bottom:12px"><textarea id="pasteTxt" class="field" rows="4" placeholder="Вставьте сюда текст, скопированный закладкой «tabi: собрать цены»" style="resize:vertical;font-size:13px"></textarea>
      <button class="btn tap" style="margin-top:8px;height:48px" data-act="pasteApply">Применить</button></div>
    ${document.documentElement.dataset.korzinkaExt?'<div class="note ok" style="margin-bottom:10px">Расширение подключено. Цены, которые оно собирает на сайтах магазинов, появляются здесь сами.</div>':''}
    <a class="btn soft tap" style="margin-bottom:10px;text-decoration:none" href="collector.html">Как обновлять цены: расширение, закладка, скрипты</a>
@@ -1149,7 +1149,7 @@ function vOnb(){
   const row=ids.map(s=>`<span class="ml"><img src="img2/store/${s}.webp" alt="${esc(SN(s))}" loading="eager"></span>`).join('');
   const r=RID.b1,kc=Math.round(r.kcal),pr=Math.round(r.p);
   return `<div class="onb onb2"><div class="in">
-    <div class="logo"><i>${I.cart}</i>Корзинка</div>
+    <div class="logo" aria-label="tabi — таби"><img class="tabi-mark" src="brand/tabi-app-icon.svg" alt=""><img class="tabi-wordmark" src="brand/tabi-wordmark.svg" alt="tabi"></div>
     <div class="marq" aria-hidden="true"><div class="mtrack">${row}${row}</div></div>
     <div class="ohero" aria-hidden="true"><div class="gstack">
       <div class="gcard gmain"><span class="gk">Корзина на неделю</span><b class="gsum">3 850 <small>₽</small></b><span class="gsave">−1 420 ₽</span>
@@ -1315,9 +1315,9 @@ const A={
     if(INSTALL){INSTALL.prompt();INSTALL.userChoice.finally(()=>{INSTALL=null});return}
     const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
     openSheet(`<div class="shead"><h2 class="lt" style="font-size:26px">На экран телефона</h2><button class="rb" data-act="closeSheet" aria-label="Закрыть">${I.x}</button></div>
-    <div class="list">${(ios?[['1','Откройте Корзинку в Safari'],['2','Нажмите «Поделиться», это квадрат со стрелкой вверх внизу экрана'],['3','Выберите «На экран „Домой“» и нажмите «Добавить»']]
-      :[['1','Откройте Корзинку в Chrome'],['2','Нажмите ⋮ в правом верхнем углу'],['3','Выберите «Добавить на главный экран» или «Установить приложение»']]).map(([n,t])=>`<div class="row"><span class="ri lime">${n}</span><span class="rl">${t}</span></div>`).join('')}</div>
-    <p class="foot">Появится значок Корзинки. Открывается без строки браузера, а меню, корзина и рецепты работают без интернета. Он нужен только для обновления цен.</p>`)},
+    <div class="list">${(ios?[['1','Откройте tabi в Safari'],['2','Нажмите «Поделиться», это квадрат со стрелкой вверх внизу экрана'],['3','Выберите «На экран „Домой“» и нажмите «Добавить»']]
+      :[['1','Откройте tabi в Chrome'],['2','Нажмите ⋮ в правом верхнем углу'],['3','Выберите «Добавить на главный экран» или «Установить приложение»']]).map(([n,t])=>`<div class="row"><span class="ri lime">${n}</span><span class="rl">${t}</span></div>`).join('')}</div>
+    <p class="foot">Появится значок tabi. Открывается без строки браузера, а меню, корзина и рецепты работают без интернета. Он нужен только для обновления цен.</p>`)},
   shopMode:()=>{S.shopMode=!S.shopMode;save();render(true);},
   paid:a=>{const id=a.dataset.v,it=Object.values(shop().recommended.alloc).flat().find(i=>i.pid===id);if(!it)return;const plan=it.price*it.packs;
     openSheet(`<div class="shead"><h2 class="lt" style="font-size:24px">${PROD[id].n}</h2><button class="rb" data-act="closeSheet" aria-label="Закрыть">${I.x}</button></div>

@@ -57,7 +57,7 @@ const NEAR_R=3000;                       // радиус поиска, м
 const CHAINS={chizhik:/чижик/,svetofor:/светофор/,pyat:/пят[её]рочка/,magnit:/магнит/,perek:/перекр[её]сток/,dixy:/дикси/,vkusvill:/вкусвилл/,azbuka:/азбука вкуса/};
 const OFFLINE=Object.keys(CHAINS);
 const LEAF='https://unpkg.com/leaflet@1.9.4/dist/';
-const UA_NOTE='Korzinka/1.0 (family grocery budget app)';
+const UA_NOTE='tabi/1.0 (family grocery budget app)';
 let GMAP=null,GTIMER=null,GBUSY=false,GNEAR=0;
 
 const fmtD=m=>m<1000?Math.round(m/10)*10+' м':(m/1000).toFixed(1).replace('.',',')+' км';
